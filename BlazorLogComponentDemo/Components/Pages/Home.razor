@@ -1,0 +1,27 @@
+﻿@page "/"
+
+<PageTitle>LogView demo</PageTitle>
+
+<h1>LogView demo</h1>
+
+<p>The LogView component shows messages send to the log by calling the standard logger.Log*() methods.</p>
+
+<p>The LogView component contains a filter for what type of messages to display. The logging level of the
+    logging system is controlled bu the application's configuration. By default, in a new Blazor project, the
+    logging level is set to 'Information' and because of that, you will not see messages of types Debug and
+    Trace. In this demo, the default logging level is set to Trace in 'appsetting.Development.json'.</p>
+
+<LoggerInput />
+
+<br />
+
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h5>LogView component</h5>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <LogView MaxVisibleMessages="10"/>
+        </div>
+    </div>
+</div>

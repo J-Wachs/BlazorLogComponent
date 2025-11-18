@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36705.20
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorLogComponent", "BlazorLogComponent\BlazorLogComponent.csproj", "{F7DD93DF-0F90-4663-B00D-7A30F8C72925}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorLogComponentDemo", "BlazorLogComponentDemo\BlazorLogComponentDemo.csproj", "{2D0222C1-E50E-41DD-8F69-446B65ABEE33}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{D8D299A1-16CE-488A-B3E9-FE392B94C30B}"
+	ProjectSection(SolutionItems) = preProject
+		H:\LogViewComponent.PNG = H:\LogViewComponent.PNG
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7DD93DF-0F90-4663-B00D-7A30F8C72925}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7DD93DF-0F90-4663-B00D-7A30F8C72925}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7DD93DF-0F90-4663-B00D-7A30F8C72925}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7DD93DF-0F90-4663-B00D-7A30F8C72925}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D0222C1-E50E-41DD-8F69-446B65ABEE33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D0222C1-E50E-41DD-8F69-446B65ABEE33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D0222C1-E50E-41DD-8F69-446B65ABEE33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D0222C1-E50E-41DD-8F69-446B65ABEE33}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D8D299A1-16CE-488A-B3E9-FE392B94C30B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B44F1896-C442-4392-98CA-21A6BB2AC9B8}
+	EndGlobalSection
+EndGlobal

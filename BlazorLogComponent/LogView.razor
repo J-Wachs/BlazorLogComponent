@@ -1,0 +1,154 @@
+@*
+    LogView.razor
+    A Blazor component that displays real-time log messages with level filtering and auto-scrolling.
+    The filter toolbar automatically adapts to the application's configured minimum log level.
+*@
+@using Microsoft.Extensions.Logging
+@using BlazorLogComponent.Interfaces
+@using BlazorLogComponent.Models
+@using Microsoft.JSInterop
+@implements IAsyncDisposable
+@inject ILoggingService LoggingService
+@inject IJSRuntime JSRuntime
+@inject ILogger<LogView> Logger
+
+<div class="log-component-wrapper">
+    <div class="log-filter-toolbar">
+        @foreach (var logLevel in _activeLogLevels.Keys.OrderBy(l => l))
+        {
+            <button class="btn btn-sm @GetFilterButtonClass(logLevel)" @onclick="() => ToggleLogLevel(logLevel)">
+                @logLevel.ToString()
+            </button>
+        }
+    </div>
+
+    <div class="log-view-container" id="@_containerId">
+        @foreach (var msg in _visibleMessages)
+        {
+            <div class="log-entry">
+                <span class="log-timestamp">[@msg.Timestamp.ToString("HH:mm:ss.fff")]</span>
+                <span class="@GetLogLevelClass(msg.Level)">[@GetLogLevelName(msg.Level)]</span>
+                <span class="log-message">@msg.Message</span>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int MaxVisibleMessages { get; set; } = 100;
+
+    // --- JavaScript Module Path ---
+    // Change this path if you copy this component to your own project or if the JS file is located elsewhere
+    private const string JavaScriptModulePath = "./_content/BlazorLogComponent/LogView.razor.js";
+    // ------------------------------
+
+    private List<LogMessage> _visibleMessages = new();
+    private Dictionary<LogLevel, bool> _activeLogLevels = new();
+
+    private readonly string _containerId = $"log-container-{Guid.NewGuid()}";
+    private bool _shouldScrollToBottom = false;
+    private IJSObjectReference? _jsModule;
+
+    protected override void OnInitialized()
+    {
+        foreach (var level in Enum.GetValues<LogLevel>().Where(l => l != LogLevel.None))
+        {
+            if (Logger.IsEnabled(level))
+            {
+                _activeLogLevels[level] = true;
+            }
+        }
+
+        ApplyFilterAndTrim();
+        LoggingService.OnNewLogMessage += HandleNewLogMessage;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", JavaScriptModulePath);
+            }
+            catch (JSDisconnectedException)
+            {
+                // The circuit was likely disconnected before the module could be imported.
+                // This can happen during a fast reload. Nothing more to do here.
+            }
+        }
+
+        if (_shouldScrollToBottom && _jsModule is not null)
+        {
+            try
+            {
+                _shouldScrollToBottom = false;
+                await _jsModule.InvokeVoidAsync("scrollToBottom", _containerId);
+            }
+            catch (JSDisconnectedException)
+            {
+                // The circuit was disconnected while we were trying to scroll.
+                // This is an expected scenario on reload, so we just ignore it.
+            }
+        }
+    }
+
+    private void ToggleLogLevel(LogLevel level)
+    {
+        _activeLogLevels[level] = !_activeLogLevels[level];
+        ApplyFilterAndTrim();
+        _shouldScrollToBottom = true;
+    }
+
+    private void ApplyFilterAndTrim()
+    {
+        var allMessages = LoggingService.GetMessages();
+        _visibleMessages = allMessages
+            .Where(msg => _activeLogLevels.ContainsKey(msg.Level) && _activeLogLevels[msg.Level])
+            .TakeLast(MaxVisibleMessages)
+            .ToList();
+    }
+
+    private async void HandleNewLogMessage(LogMessage message)
+    {
+        await InvokeAsync(() =>
+        {
+            if (_activeLogLevels.ContainsKey(message.Level) && _activeLogLevels[message.Level])
+            {
+                _visibleMessages.Add(message);
+
+                if (_visibleMessages.Count > MaxVisibleMessages)
+                {
+                    _visibleMessages.RemoveAt(0);
+                }
+
+                _shouldScrollToBottom = true;
+                StateHasChanged();
+            }
+        });
+    }
+
+    // --- UI Helper Methods ---
+    private string GetFilterButtonClass(LogLevel level) => _activeLogLevels[level] ? "btn-primary" : "btn-outline-secondary";
+    private string GetLogLevelClass(LogLevel level) => "log-" + level.ToString().ToLower();
+    private string GetLogLevelName(LogLevel level) => level.ToString().ToUpper().Substring(0, 4);
+
+    public async ValueTask DisposeAsync()
+    {
+        LoggingService.OnNewLogMessage -= HandleNewLogMessage;
+        if (_jsModule is not null)
+        {
+            try
+            {
+                // Attempt to dispose the JS module.
+                await _jsModule.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+                // This exception is expected if the user reloads the page,
+                // as the JS context will be gone. We can safely ignore it.
+            }
+        }
+    }
+}

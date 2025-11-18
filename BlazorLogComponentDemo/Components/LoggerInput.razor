@@ -1,0 +1,90 @@
+﻿@*
+    LoggerInput.razor
+    A simple form to generate log messages for demonstrating the LogView component.
+*@
+@using Microsoft.Extensions.Logging
+@using System.ComponentModel.DataAnnotations
+@*
+    We inject the standard ILogger. Any message sent through this
+    will be automatically captured by our custom logging provider.
+*@
+@inject ILogger<LoggerInput> Logger
+
+<EditForm Model="@_logEntry" OnValidSubmit="@HandleLogSubmit" FormName="LogForm">
+    <DataAnnotationsValidator />
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h5>To see your own messages, select the type of logging and enter a message</h5>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3 align-items-center">
+                <label for="logLevelSelect" class="col-sm-3 col-form-label">Log Level</label>
+                <div class="col-sm-9">
+                    <InputSelect id="logLevelSelect" class="form-select" @bind-Value="_logEntry.Level">
+                        @foreach (var level in Enum.GetValues<LogLevel>().Where(l => l != LogLevel.None))
+                        {
+                            <option value="@level">@level.ToString()</option>
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="logMessageInput" class="col-sm-3 col-form-label">Message</label>
+                <div class="col-sm-9">
+                    <InputText id="logMessageInput" class="form-control" @bind-Value="_logEntry.Message" placeholder="Enter your log message..." />
+                    <ValidationMessage For="@(() => _logEntry.Message)" />
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Log Message</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private LogEntryModel _logEntry = new();
+
+    private void HandleLogSubmit()
+    {
+        // Use a switch statement to call the appropriate logger extension method.
+        // This ensures the log level is correctly recorded.
+        switch (_logEntry.Level)
+        {
+            case LogLevel.Trace:
+                Logger.LogTrace(_logEntry.Message);
+                break;
+            case LogLevel.Debug:
+                Logger.LogDebug(_logEntry.Message);
+                break;
+            case LogLevel.Information:
+                Logger.LogInformation(_logEntry.Message);
+                break;
+            case LogLevel.Warning:
+                Logger.LogWarning(_logEntry.Message);
+                break;
+            case LogLevel.Error:
+                Logger.LogError(_logEntry.Message);
+                break;
+            case LogLevel.Critical:
+                Logger.LogCritical(_logEntry.Message);
+                break;
+        }
+
+        // Clear the message for the next entry.
+        _logEntry.Message = string.Empty;
+    }
+
+    /// <summary>
+    /// A simple model for binding the form data.
+    /// </summary>
+    public class LogEntryModel
+    {
+        public LogLevel Level { get; set; } = LogLevel.Information;
+
+        [Required(ErrorMessage = "Please enter a message to log.")]
+        public string Message { get; set; } = string.Empty;
+    }
+}

@@ -8,15 +8,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
+		LogViewComponent.PNG = LogViewComponent.PNG
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorLogComponentDemo", "BlazorLogComponentDemo\BlazorLogComponentDemo.csproj", "{2D0222C1-E50E-41DD-8F69-446B65ABEE33}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{D8D299A1-16CE-488A-B3E9-FE392B94C30B}"
-	ProjectSection(SolutionItems) = preProject
-		H:\LogViewComponent.PNG = H:\LogViewComponent.PNG
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,9 +31,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{D8D299A1-16CE-488A-B3E9-FE392B94C30B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B44F1896-C442-4392-98CA-21A6BB2AC9B8}

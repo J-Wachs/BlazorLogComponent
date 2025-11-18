@@ -11,7 +11,7 @@ that are disabled in the application's master configuration (e.g., in `appsettin
 The component has been developed in .NET 9 and is designed to be easily integrated into any Blazor application
 (MAUI Blazor Hybrid, Server, or WebAssembly).
 
-<img src="./Images/LogViewComponent.PNG" alt="Screen shot" style="max-width: 400px;">
+<img src="./LogViewComponent.PNG" alt="Screen shot" style="max-width: 400px;">
 
 ## How does it work?
 
